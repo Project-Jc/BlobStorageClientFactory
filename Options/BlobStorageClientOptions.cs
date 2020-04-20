@@ -2,6 +2,8 @@
 {
 	public class BlobStorageClientOptions
 	{
+		public string Name { get; set; }
+
 		public string TenantId { get; set; }
 
 		public string AppId { get; set; }

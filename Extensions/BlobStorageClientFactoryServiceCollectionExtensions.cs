@@ -28,7 +28,7 @@ namespace Azure.Storage.BlobStorageClientFactory.Extensions
 			return services;
 		}
 
-		public static IServiceCollection AddBlobStorageClient(this IServiceCollection services, Action<BlobStorageClientFactoryOptions> factoryImplementation, Action<string, BlobStorageClientOptions> clientImplementation)
+		public static IServiceCollection AddBlobStorageClient(this IServiceCollection services, Action<BlobStorageClientFactoryOptions> factoryImplementation, Action<BlobStorageClientOptions> clientImplementation)
 		{
 			if (services == null)
 				throw new ArgumentNullException(nameof(services));
@@ -44,11 +44,10 @@ namespace Azure.Storage.BlobStorageClientFactory.Extensions
 			factoryImplementation(factoryOptions);
 
 			var clientOption = new BlobStorageClientOptions();
-			var clientName = string.Empty;
 
-			clientImplementation(clientName, clientOption);
+			clientImplementation(clientOption);
 
-			factoryOptions.ClientOptions.Add(clientName, clientOption);
+			factoryOptions.ClientOptions.Add(clientOption.Name, clientOption);
 
 			services.AddSingleton(factoryOptions);
 
