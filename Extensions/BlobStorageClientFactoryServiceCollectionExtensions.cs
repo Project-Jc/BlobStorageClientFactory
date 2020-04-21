@@ -11,6 +11,23 @@ namespace Azure.Storage.BlobStorageClientFactory.Extensions
 {
 	public static class BlobStorageClientFactoryServiceCollectionExtensions
 	{
+		public static IServiceCollection AddBlobStorageClient(this IServiceCollection services, IConfigurationSection configurationSection)
+		{
+			if (services == null)
+				throw new ArgumentNullException(nameof(services));
+
+			if (configurationSection == null)
+				throw new ArgumentNullException(nameof(configurationSection));
+
+			var factoryOptions = configurationSection.Get<BlobStorageClientFactoryOptions>();
+
+			services.AddSingleton(factoryOptions);
+
+			services.AddScoped<IBlobStorageClientFactory, Concretions.BlobStorageClientFactory>();
+
+			return services;
+		}
+
 		public static IServiceCollection AddBlobStorageClient(this IServiceCollection services, IConfiguration configuration)
 		{
 			if (services == null)
@@ -19,13 +36,7 @@ namespace Azure.Storage.BlobStorageClientFactory.Extensions
 			if (configuration == null)
 				throw new ArgumentNullException(nameof(configuration));
 
-			var factoryOptions = configuration.GetSection("BlobStorageClientFactoryOptions").Get<BlobStorageClientFactoryOptions>();
-
-			services.AddSingleton(factoryOptions);
-
-			services.AddScoped<IBlobStorageClientFactory, Concretions.BlobStorageClientFactory>();
-
-			return services;
+			return AddBlobStorageClient(services, configuration.GetSection("BlobStorageClientFactoryOptions"));
 		}
 
 		public static IServiceCollection AddBlobStorageClient(this IServiceCollection services, Action<BlobStorageClientFactoryOptions> configureFactory, Action<BlobStorageClientOptions> configureClient)

@@ -28,8 +28,11 @@ namespace Azure.Storage.BlobStorageClientFactory.Examples
 		{
 			var serviceCollection = new ServiceCollection();
 
-			// Register the factory from a JSON configuration file.
+			// Register the factory from an IConfiguration object.
 			serviceCollection.AddBlobStorageClient(Configuration);
+
+			// Register the factory from an IConfigurationSection object.
+			serviceCollection.AddBlobStorageClient(Configuration.GetSection("BlobStorageClientFactoryOptions"));
 
 			// Register the factory with a single named client.
 			serviceCollection.AddBlobStorageClient(
